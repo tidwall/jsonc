@@ -28,7 +28,7 @@ commas, such as:
 }
 ```
 
-There's the a provided function `jsonc.ToJSON`, which does the conversion.
+There's a provided function `jsonc.ToJSON`, which does the conversion.
 
 The resulting JSON will always be the same length as the input and it will
 include all of the same line breaks at matching offsets. This is to ensure
