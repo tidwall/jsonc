@@ -10,7 +10,7 @@ func TestToJSON(t *testing.T) {
        LIKE
        IT
        HAUT */
-    "d": [ 1, /* 2 */ 3, 4, ],
+    "d\\\"\"e": [ 1, /* 2 */ 3, 4, ],
   }`
 	expect := `
   {    	     
@@ -19,7 +19,7 @@ func TestToJSON(t *testing.T) {
            
          
               
-    "d": [ 1,         3, 4  ] 
+    "d\\\"\"e": [ 1,         3, 4  ] 
   }`
 	out := string(ToJSON([]byte(json)))
 	if out != expect {
