@@ -13,14 +13,14 @@ commas, such as:
   /* Dev Machine */
   "dbInfo": {
     "host": "localhost",
-    "port": 5432,          // use full email address
+    "port": 5432,          
     "username": "josh",
-    "password": "pass123", // use a hashed password
+    "password": "pass123", // please use a hashed password
   },
 
   /* Only SMTP Allowed */
   "emailInfo": {
-    "email": "josh@example.com",
+    "email": "josh@example.com", // use full email address
     "password": "pass123",
     "smtp": "smpt.example.com",
   }
