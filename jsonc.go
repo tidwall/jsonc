@@ -1,6 +1,6 @@
 package jsonc
 
-// Convert strips out comments and trailing commas and convert the input to a
+// ToJSON strips out comments and trailing commas and convert the input to a
 // valid JSON per the official spec: https://tools.ietf.org/html/rfc8259
 //
 // The resulting JSON will always be the same length as the input and it will
@@ -11,7 +11,7 @@ func ToJSON(src []byte) []byte {
 	return toJSON(src, nil)
 }
 
-// ConvertInPlace is the same as ToJSON, but this method reuses the input json
+// ToJSONInPlace is the same as ToJSON, but this method reuses the input json
 // buffer to avoid allocations. Do not use the original bytes slice upon return.
 func ToJSONInPlace(src []byte) []byte {
 	return toJSON(src, src)
