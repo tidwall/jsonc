@@ -2,7 +2,7 @@
 
 [![GoDoc](https://img.shields.io/badge/api-reference-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/tidwall/jsonc) 
 
-jsonc is a Go package that converts the `jsonc` format to standard json.
+jsonc is a Go package that converts the jsonc format to standard json.
 
 The jsonc format is like standard json but allows for comments and trailing
 commas, such as:
