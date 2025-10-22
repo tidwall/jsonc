@@ -1,0 +1,117 @@
+name: CI
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+    test:
+        name: Test
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                go-version: ["1.16", "1.17", "1.18", "1.19", "1.20", "1.21"]
+
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: ${{ matrix.go-version }}
+
+            - name: Get dependencies
+              run: go get -v -t -d ./...
+
+            - name: Build
+              run: go build -v ./...
+
+            - name: Run tests
+              run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+            - name: Upload coverage to Codecov
+              if: matrix.go-version == '1.21'
+              uses: codecov/codecov-action@v3
+              with:
+                  file: ./coverage.txt
+                  flags: unittests
+                  name: codecov-umbrella
+
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.21"
+
+            - name: golangci-lint
+              uses: golangci/golangci-lint-action@v3
+              with:
+                  version: latest
+                  args: --timeout=5m
+
+    format:
+        name: Format Check
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.21"
+
+            - name: Check formatting
+              run: |
+                  if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+                    echo "The following files are not formatted:"
+                    gofmt -s -l .
+                    echo "Please run 'gofmt -s -w .' to format your code."
+                    exit 1
+                  fi
+
+    vet:
+        name: Go Vet
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.21"
+
+            - name: Run go vet
+              run: go vet ./...
+
+    staticcheck:
+        name: Static Check
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.21"
+
+            - name: Install staticcheck
+              run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+            - name: Run staticcheck
+              run: staticcheck ./...
