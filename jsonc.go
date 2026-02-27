@@ -1,5 +1,9 @@
 package jsonc
 
+import (
+	"encoding/json"
+)
+
 // ToJSON strips out comments and trailing commas and convert the input to a
 // valid JSON per the official spec: https://tools.ietf.org/html/rfc8259
 //
@@ -9,6 +13,21 @@ package jsonc
 // parser will report messages or errors with the correct offsets.
 func ToJSON(src []byte) []byte {
 	return toJSON(src, nil)
+}
+
+// Unmarshal parses the JSONC data and stores the result in the value pointed
+// to by v. It is a drop-in replacement for json.Unmarshal from encoding/json.
+//
+// Unmarshal supports comments (both // and /* */) and trailing commas.
+func Unmarshal(data []byte, v any) error {
+	cleaned := ToJSON(data)
+	return json.Unmarshal(cleaned, v)
+}
+
+// Marshal returns the JSON encoding of v. It is a drop-in replacement for
+// json.Marshal from encoding/json.
+func Marshal(v any) ([]byte, error) {
+	return json.Marshal(v)
 }
 
 // ToJSONInPlace is the same as ToJSON, but this method reuses the input json

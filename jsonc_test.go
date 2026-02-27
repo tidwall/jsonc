@@ -2,6 +2,27 @@ package jsonc
 
 import "testing"
 
+func TestUnmarshal(t *testing.T) {
+	type Person struct {
+		Name string `json:"name"`
+	}
+
+	jsonc := `{
+		// This is a comment
+		"name": "John",
+	}`
+
+	want := Person{Name: "John"}
+	var got Person
+	err := Unmarshal([]byte(jsonc), &got)
+	if err != nil {
+		t.Fatalf("Unmarshal() error = %v", err)
+	}
+	if got != want {
+		t.Errorf("Unmarshal() got = %v, want %v", got, want)
+	}
+}
+
 func TestToJSON(t *testing.T) {
 	json := `
   {  //	hello
