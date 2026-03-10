@@ -39,11 +39,13 @@ func toJSON(src, dst []byte) []byte {
 				}
 				if src[i+1] == '*' {
 					dst = append(dst, ' ', ' ')
+					j := i
 					i += 2
 					for ; i < len(src)-1; i++ {
 						if src[i] == '*' && src[i+1] == '/' {
 							dst = append(dst, ' ', ' ')
 							i++
+							j = -1
 							break
 						} else if src[i] == '\n' || src[i] == '\t' ||
 							src[i] == '\r' {
@@ -51,6 +53,11 @@ func toJSON(src, dst []byte) []byte {
 						} else {
 							dst = append(dst, ' ')
 						}
+					}
+					if j != -1 {
+						dst = append(dst, ' ')
+						dst[j] = '/'
+						dst[j+1] = '*'
 					}
 					continue
 				}
