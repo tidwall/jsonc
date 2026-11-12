@@ -26,10 +26,10 @@ func toJSON(src, dst []byte) []byte {
 					dst = append(dst, ' ', ' ')
 					i += 2
 					for ; i < len(src); i++ {
-						if src[i] == '\n' {
-							dst = append(dst, '\n')
+						if src[i] == '\r' || src[i] == '\n' {
+							dst = append(dst, src[i])
 							break
-						} else if src[i] == '\t' || src[i] == '\r' {
+						} else if src[i] == '\t' {
 							dst = append(dst, src[i])
 						} else {
 							dst = append(dst, ' ')

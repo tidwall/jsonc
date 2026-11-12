@@ -53,3 +53,26 @@ func TestIssue3(t *testing.T) {
                                 `,
 	)
 }
+
+func TestIssue6(t *testing.T) {
+	src := "{// c\r\"a\": 1}"
+	exp := "{    \r\"a\": 1}"
+	got := string(ToJSON([]byte(src)))
+	if got != exp {
+		t.Fatalf("expected '%s', got '%s'", exp, got)
+	}
+
+	src = "{// c\r\n\"a\": 1}"
+	exp = "{    \r\n\"a\": 1}"
+	got = string(ToJSON([]byte(src)))
+	if got != exp {
+		t.Fatalf("expected '%s', got '%s'", exp, got)
+	}
+	src = "{// c\n\r\"a\": 1}"
+	exp = "{    \n\r\"a\": 1}"
+	got = string(ToJSON([]byte(src)))
+	if got != exp {
+		t.Fatalf("expected '%s', got '%s'", exp, got)
+	}
+
+}
