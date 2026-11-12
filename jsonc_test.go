@@ -11,11 +11,11 @@ func testToJSON(t *testing.T, json, expect string) {
 	}
 	out := string(ToJSON([]byte(json)))
 	if out != expect {
-		t.Fatalf("expected '%s', got '%s'", expect, out)
+		t.Fatalf("\nexpected\n\t'%q'\ngot\n\t'%q'", expect, out)
 	}
 	out = string(ToJSONInPlace([]byte(json)))
 	if out != expect {
-		t.Fatalf("expected '%s', got '%s'", expect, out)
+		t.Fatalf("\nexpected\n\t'%q'\ngot\n\t'%q'", expect, out)
 	}
 }
 
@@ -55,24 +55,53 @@ func TestIssue3(t *testing.T) {
 }
 
 func TestIssue6(t *testing.T) {
-	src := "{// c\r\"a\": 1}"
-	exp := "{    \r\"a\": 1}"
-	got := string(ToJSON([]byte(src)))
-	if got != exp {
-		t.Fatalf("expected '%s', got '%s'", exp, got)
-	}
+	testToJSON(t,
+		"{// c\r\"a\": 1}",
+		"{    \r\"a\": 1}",
+	)
+	testToJSON(t,
+		"{// c\r\n\"a\": 1}",
+		"{    \r\n\"a\": 1}",
+	)
+	testToJSON(t,
+		"{// c\n\r\"a\": 1}",
+		"{    \n\r\"a\": 1}",
+	)
 
-	src = "{// c\r\n\"a\": 1}"
-	exp = "{    \r\n\"a\": 1}"
-	got = string(ToJSON([]byte(src)))
-	if got != exp {
-		t.Fatalf("expected '%s', got '%s'", exp, got)
-	}
-	src = "{// c\n\r\"a\": 1}"
-	exp = "{    \n\r\"a\": 1}"
-	got = string(ToJSON([]byte(src)))
-	if got != exp {
-		t.Fatalf("expected '%s', got '%s'", exp, got)
-	}
+}
+
+func TestIssue5(t *testing.T) {
+	testToJSON(t,
+		"{\"a\":1}",
+		"{\"a\":1}",
+	)
+	testToJSON(t,
+		"{\"a\":1}/",
+		"{\"a\":1}/",
+	)
+	testToJSON(t,
+		"{\"a\":1}/*",
+		"{\"a\":1}/*",
+	)
+	testToJSON(t,
+		"{\"a\":1}/* ",
+		"{\"a\":1}/* ",
+	)
+	testToJSON(t,
+		"{\"a\":1}/*\r",
+		"{\"a\":1}/*\r",
+	)
+	testToJSON(t,
+		"{\"a\":1}/*\t",
+		"{\"a\":1}/*\t",
+	)
+	testToJSON(t,
+		"{\"a\":1}/*\r\n",
+		"{\"a\":1}/*\r\n",
+	)
+	testToJSON(t,
+		"{\"a\":1}/*\n",
+		"{\"a\":1}/*\n",
+	)
 
 }
